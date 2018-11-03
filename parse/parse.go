@@ -1,4 +1,4 @@
-package cpuidb
+package parse
 
 import (
 	"bufio"
@@ -8,6 +8,8 @@ import (
 	"os"
 	"regexp"
 	"strings"
+
+	"github.com/mmcloughlin/cpuidb"
 )
 
 type Property struct {
@@ -98,8 +100,8 @@ func ParseConfig(r io.Reader) (*Config, error) {
 	return cfg, nil
 }
 
-func BuildCPUIDLeaves(s *Section) (map[uint32][]Leaf, error) {
-	leaves := make(map[uint32][]Leaf)
+func BuildCPUIDLeaves(s *Section) (map[uint32][]cpuidb.Leaf, error) {
+	leaves := make(map[uint32][]cpuidb.Leaf)
 
 	for _, p := range s.Properties {
 		var eax uint32
@@ -108,7 +110,7 @@ func BuildCPUIDLeaves(s *Section) (map[uint32][]Leaf, error) {
 			continue
 		}
 
-		var l Leaf
+		var l cpuidb.Leaf
 		n, err = fmt.Sscanf(p.Value, "%X-%X-%X-%X", &l.EAX, &l.EBX, &l.ECX, &l.EDX)
 		if n != 4 || err != nil {
 			return nil, err
@@ -121,7 +123,7 @@ func BuildCPUIDLeaves(s *Section) (map[uint32][]Leaf, error) {
 }
 
 // ParseCPU parses CPU data.
-func ParseCPU(r io.Reader) (*CPU, error) {
+func ParseCPU(r io.Reader) (*cpuidb.CPU, error) {
 	// Parse config sections.
 	cfg, err := ParseConfig(r)
 	if err != nil {
@@ -146,7 +148,7 @@ func ParseCPU(r io.Reader) (*CPU, error) {
 	}
 
 	// Construct CPU.
-	cpu := &CPU{
+	cpu := &cpuidb.CPU{
 		Type:     info.Property("CPU Type"),
 		Alias:    info.Property("CPU Alias"),
 		Platform: info.Property("CPU Platform"),
@@ -158,7 +160,7 @@ func ParseCPU(r io.Reader) (*CPU, error) {
 }
 
 // ParseCPUFile parses CPU data from a given file. This is just a convenience around ParseCPU.
-func ParseCPUFile(filename string) (*CPU, error) {
+func ParseCPUFile(filename string) (*cpuidb.CPU, error) {
 	f, err := os.Open(filename)
 	if err != nil {
 		return nil, err

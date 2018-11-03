@@ -15,6 +15,7 @@ import (
 	"strings"
 
 	"github.com/mmcloughlin/cpuidb"
+	"github.com/mmcloughlin/cpuidb/parse"
 )
 
 var (
@@ -36,7 +37,7 @@ func ParseCPUIDFiles(dir string) []*cpuidb.CPU {
 
 	cpus := make([]*cpuidb.CPU, 0, len(filenames))
 	for _, filename := range filenames {
-		cpu, err := cpuidb.ParseCPUFile(filename)
+		cpu, err := parse.ParseCPUFile(filename)
 		if err != nil {
 			log.Printf("failed to parse %s: %s", filename, err)
 			continue
