@@ -49,7 +49,7 @@ func ParseCPUIDFiles(dir string) []*cpuidb.CPU {
 
 // CPUGoSyntax returns Go code for the given struct. Intended to be used inside an array initializer.
 func CPUGoSyntax(cpu *cpuidb.CPU) string {
-	return strings.TrimPrefix(fmt.Sprintf("%#v", *cpu), "cpuidb.CPU")
+	return strings.Replace(fmt.Sprintf("%#v", *cpu), "cpuidb.", "", -1)
 }
 
 // Build Go source code that defines the given list of CPUs. Output not formatted.

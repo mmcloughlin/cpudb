@@ -3,22 +3,43 @@ package cpuidb
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"regexp"
 	"strings"
 )
 
+type Property struct {
+	Key   string
+	Value string
+}
+
 type Section struct {
 	Name       string
-	Properties map[string]string
+	Properties []Property
 }
 
 func NewSection(name string) *Section {
 	return &Section{
-		Name:       name,
-		Properties: make(map[string]string),
+		Name: name,
 	}
+}
+
+func (s *Section) AddProperty(k, v string) {
+	s.Properties = append(s.Properties, Property{
+		Key:   k,
+		Value: v,
+	})
+}
+
+func (s *Section) Property(key string) string {
+	for _, p := range s.Properties {
+		if p.Key == key {
+			return p.Value
+		}
+	}
+	return ""
 }
 
 type Config struct {
@@ -63,7 +84,7 @@ func ParseConfig(r io.Reader) (*Config, error) {
 			continue
 		}
 
-		s.Properties[strings.TrimSpace(parts[0])] = strings.TrimSpace(parts[1])
+		s.AddProperty(strings.TrimSpace(parts[0]), strings.TrimSpace(parts[1]))
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -75,6 +96,28 @@ func ParseConfig(r io.Reader) (*Config, error) {
 	}
 
 	return cfg, nil
+}
+
+func BuildCPUIDLeaves(s *Section) (map[uint32][]Leaf, error) {
+	leaves := make(map[uint32][]Leaf)
+
+	for _, p := range s.Properties {
+		var eax uint32
+		n, err := fmt.Sscanf(p.Key, "CPUID %X", &eax)
+		if n != 1 || err != nil {
+			continue
+		}
+
+		var l Leaf
+		n, err = fmt.Sscanf(p.Value, "%X-%X-%X-%X", &l.EAX, &l.EBX, &l.ECX, &l.EDX)
+		if n != 4 || err != nil {
+			return nil, err
+		}
+
+		leaves[eax] = append(leaves[eax], l)
+	}
+
+	return leaves, nil
 }
 
 // ParseCPU parses CPU data.
@@ -91,9 +134,24 @@ func ParseCPU(r io.Reader) (*CPU, error) {
 		return nil, errors.New("missing CPU Info section")
 	}
 
+	// Fetch CPUID Info.
+	cpu0, found := cfg.LookupSection("Logical CPU #0")
+	if !found {
+		return nil, errors.New("missing CPUID for CPU #0")
+	}
+
+	leaves, err := BuildCPUIDLeaves(cpu0)
+	if err != nil {
+		return nil, err
+	}
+
+	// Construct CPU.
 	cpu := &CPU{
-		Type:  info.Properties["CPU Type"],
-		Alias: info.Properties["CPU Alias"],
+		Type:     info.Property("CPU Type"),
+		Alias:    info.Property("CPU Alias"),
+		Platform: info.Property("CPU Platform"),
+		Stepping: info.Property("CPU Stepping"),
+		Leaves:   leaves,
 	}
 
 	return cpu, nil
