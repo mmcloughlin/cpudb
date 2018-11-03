@@ -37,9 +37,9 @@ func ParseCPUIDFiles(dir string) []*cpuidb.CPU {
 
 	cpus := make([]*cpuidb.CPU, 0, len(filenames))
 	for _, filename := range filenames {
-		cpu, err := parse.ParseCPUFile(filename)
+		cpu, err := parse.CPUFile(filename)
 		if err != nil {
-			log.Printf("failed to parse %s: %s", filename, err)
+			log.Printf("failed to parse %s: %s", filepath.Base(filename), err)
 			continue
 		}
 		cpus = append(cpus, cpu)

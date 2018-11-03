@@ -1,3 +1,4 @@
+// Package parse provides parsing for InstLatx64 CPUID dumps.
 package parse
 
 import (
@@ -12,22 +13,26 @@ import (
 	"github.com/mmcloughlin/cpuidb"
 )
 
+// Property is a key-value pair.
 type Property struct {
 	Key   string
 	Value string
 }
 
+// Section is a section from the input, with a heading and a collection of properties.
 type Section struct {
 	Name       string
-	Properties []Property
+	Properties []Property // Slice preferred over a map to preserve order.
 }
 
+// NewSection constructs a section with the given name.
 func NewSection(name string) *Section {
 	return &Section{
 		Name: name,
 	}
 }
 
+// AddProperty appends a Property to the section.
 func (s *Section) AddProperty(k, v string) {
 	s.Properties = append(s.Properties, Property{
 		Key:   k,
@@ -35,6 +40,7 @@ func (s *Section) AddProperty(k, v string) {
 	})
 }
 
+// Property returns the first Properties entry with the given key, or the empty string if not found.
 func (s *Section) Property(key string) string {
 	for _, p := range s.Properties {
 		if p.Key == key {
@@ -44,23 +50,25 @@ func (s *Section) Property(key string) string {
 	return ""
 }
 
+// Config represents all data found in a CPUID dump file.
 type Config struct {
 	Sections []*Section
 }
 
-func (c *Config) LookupSection(name string) (*Section, bool) {
+// LookupSection returns the first Section with the given name. Returns nil if not found.
+func (c *Config) LookupSection(name string) *Section {
 	for _, s := range c.Sections {
 		if s.Name == name {
-			return s, true
+			return s
 		}
 	}
-	return nil, false
+	return nil
 }
 
 var headingRegexp = regexp.MustCompile(`^------\[ (.+) \]------$`)
 
-// ParseConfig parses the overall sections and key-value pairs.
-func ParseConfig(r io.Reader) (*Config, error) {
+// ConfigSections parses all sections and key-value pairs.
+func ConfigSections(r io.Reader) (*Config, error) {
 	cfg := &Config{}
 	var s *Section
 
@@ -100,6 +108,7 @@ func ParseConfig(r io.Reader) (*Config, error) {
 	return cfg, nil
 }
 
+// BuildCPUIDLeaves parses properties starting with "CPUID" into a structured format.
 func BuildCPUIDLeaves(s *Section) (map[uint32][]cpuidb.Leaf, error) {
 	leaves := make(map[uint32][]cpuidb.Leaf)
 
@@ -122,23 +131,23 @@ func BuildCPUIDLeaves(s *Section) (map[uint32][]cpuidb.Leaf, error) {
 	return leaves, nil
 }
 
-// ParseCPU parses CPU data.
-func ParseCPU(r io.Reader) (*cpuidb.CPU, error) {
+// CPU parses CPU data.
+func CPU(r io.Reader) (*cpuidb.CPU, error) {
 	// Parse config sections.
-	cfg, err := ParseConfig(r)
+	cfg, err := ConfigSections(r)
 	if err != nil {
 		return nil, err
 	}
 
 	// Fetch CPU Info.
-	info, found := cfg.LookupSection("CPU Info")
-	if !found {
+	info := cfg.LookupSection("CPU Info")
+	if info == nil {
 		return nil, errors.New("missing CPU Info section")
 	}
 
 	// Fetch CPUID Info.
-	cpu0, found := cfg.LookupSection("Logical CPU #0")
-	if !found {
+	cpu0 := cfg.LookupSection("Logical CPU #0")
+	if cpu0 == nil {
 		return nil, errors.New("missing CPUID for CPU #0")
 	}
 
@@ -159,13 +168,13 @@ func ParseCPU(r io.Reader) (*cpuidb.CPU, error) {
 	return cpu, nil
 }
 
-// ParseCPUFile parses CPU data from a given file. This is just a convenience around ParseCPU.
-func ParseCPUFile(filename string) (*cpuidb.CPU, error) {
+// CPUFile parses CPU data from a given file. This is just a convenience around ParseCPU.
+func CPUFile(filename string) (*cpuidb.CPU, error) {
 	f, err := os.Open(filename)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
 
-	return ParseCPU(f)
+	return CPU(f)
 }
