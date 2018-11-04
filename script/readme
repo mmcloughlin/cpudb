@@ -1,0 +1,7 @@
+#!/bin/bash -ex
+
+go get github.com/campoy/embedmd
+
+go run example/sha.go | tee example/sha.out
+
+embedmd -w README.md

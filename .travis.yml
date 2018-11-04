@@ -3,9 +3,11 @@ go:
 - 1.x
 script:
 - go test -v
+- go run example/sha.go
 - "./script/build"
 - go test -v
 after_success:
+- ./script/readme
 - if [[ ${TRAVIS_EVENT_TYPE} == "cron" ]]; then ./script/push; fi
 env:
   global:
