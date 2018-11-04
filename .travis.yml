@@ -2,5 +2,12 @@ language: go
 go:
 - 1.x
 script:
-- ./script/build
+- "./script/build"
 - go build
+after_success:
+- ./script/push
+env:
+  global:
+  - GIT_EMAIL="travis@travis-ci.org"
+  - GIT_USER="travis"
+  - secure: m+uY58/N87NwDQxHG1Pd+Gju5i9NjliifhxbDxJ8/hvaU3lFPXVNZMftjYkmcYeKnNNtRjZrkHEuMH/Jc+9jxWvxdkbIkf+pjS/c62bMUIhcdjPaknJxs+khIqoF3EZJrT+7JfCzwu8SMDfCGK4tTKW4d/R+nwmkRCQZVKsrHG2ArF4SFxEL2+sxLghzrrql3dyTt1IWYCBo+B/SusgdDX//7XyRdDYy/1EsG17h1Gbi29TR+PpThO02jxGinw4sJ62qOALS1JHcokgnChUJXNMVGVKZgDtFcCSBOGAY1/wzrt/uP/oi6yepaa8JqK9JIneTwqdvPTvUBiQJ1VEijgxa2AwDsxD7oN1Ytu21uFUM/EBLWHxwhPiZFY3Ylzo893JuO0Jj9+sW8Py+86qSaS+qnngMluN8M6dcKpuh1XBVYntsc/0zze+R+eLliA1PnZ5jWzrF8yV/5NIGMICQWIkmT/10glFkOSptDExQzYrLBtqItz3j4aQhiq39pt3r1DZkVxMX8A6A726Y9njajdxJzWYjsC/AzMOJ5ncgyUNIQG2Ba0dYTuvJcxRhW+qiUON6sx3GZd6KfYwRefPJR4y8ceAvr7xixcEZTeR30ewPjazaNuf48EIy9Sj1wk73trgLMUe+jF5jB5v8ne9z4mh3Uj34RYKsR10UXlrn1PM=

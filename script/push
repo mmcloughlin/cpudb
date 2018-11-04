@@ -1,0 +1,8 @@
+#!/bin/bash -ex
+
+git config --local user.email ${GIT_EMAIL}
+git config --local user.name ${GIT_USER}
+
+git commit --all --allow-empty --message "Travis build ${TRAVIS_BUILD_NUMBER}"
+
+git push --quiet https://${GITHUB_TOKEN}@github.com/mmcloughlin/cpudb.git HEAD:master > /dev/null 2>&1
