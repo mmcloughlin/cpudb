@@ -5,7 +5,7 @@ out=${1:-db.go}
 repo="InstLatx64/InstLatx64"
 workdir=$(mktemp -d)
 
-curl -L https://api.github.com/repos/${repo}/tarball | tar -C ${workdir} --strip-components=1 -xf -
+curl -L https://api.github.com/repos/${repo}/tarball | tar -C ${workdir} --strip-components=1 -xzf -
 
 rm -f ${out}
 go run make_db.go -src ${workdir} -out ${out}
