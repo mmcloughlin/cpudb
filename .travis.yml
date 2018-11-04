@@ -7,7 +7,7 @@ script:
 - "./script/build"
 - go test -v
 after_success:
-- ./script/readme
+- ./script/doc
 - if [[ ${TRAVIS_EVENT_TYPE} == "cron" ]]; then ./script/push; fi
 env:
   global:
