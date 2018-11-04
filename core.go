@@ -1,4 +1,4 @@
-package cpuidb
+package cpudb
 
 // CPU represents CPU properties.
 type CPU struct {
