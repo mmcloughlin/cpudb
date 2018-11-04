@@ -2,8 +2,9 @@ language: go
 go:
 - 1.x
 script:
+- go test -v
 - "./script/build"
-- go build
+- go test -v
 after_success:
 - if [[ ${TRAVIS_EVENT_TYPE} == "cron" ]]; then ./script/push; fi
 env:
