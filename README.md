@@ -5,6 +5,10 @@
 [![GoDoc Reference](http://img.shields.io/badge/godoc-reference-5272B4.svg?style=flat-square)](http://godoc.org/github.com/mmcloughlin/cpudb)
 [![Build status](https://img.shields.io/travis/mmcloughlin/cpudb.svg?style=flat-square)](https://travis-ci.org/mmcloughlin/cpudb)
 
+## Description
+
+This package contains a list of CPUs from the InstLatx64 database along with their CPUID values. The [`CPU.CPUID()`](https://godoc.org/github.com/mmcloughlin/cpudb#CPU.CPUID) method enables you to perform CPUID queries on each processor, therefore enabling filtering to processors with specific capabilities.
+
 ## Example
 
 The following [example](example/sha.go) shows how to search the database for CPUs supporting [SHA extensions](https://en.wikipedia.org/wiki/Intel_SHA_extensions).
