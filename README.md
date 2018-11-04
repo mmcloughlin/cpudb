@@ -7,7 +7,7 @@
 
 ## Description
 
-This package contains a list of CPUs from the InstLatx64 database along with their CPUID values. The [`CPU.CPUID()`](https://godoc.org/github.com/mmcloughlin/cpudb#CPU.CPUID) method enables you to perform CPUID queries on each processor, therefore enabling filtering to processors with specific capabilities.
+This package contains a list of CPUs from the [InstLatx64 database](https://github.com/InstLatx64/InstLatx64) along with their CPUID values. The [`CPU.CPUID()`](https://godoc.org/github.com/mmcloughlin/cpudb#CPU.CPUID) method enables you to perform CPUID queries on each processor, therefore enabling filtering to processors with specific capabilities.
 
 ## Example
 
