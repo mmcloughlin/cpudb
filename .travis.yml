@@ -5,7 +5,7 @@ script:
 - "./script/build"
 - go build
 after_success:
-- ./script/push
+- if [[ ${TRAVIS_EVENT_TYPE} == "cron" ]]; then ./script/push; fi
 env:
   global:
   - GIT_EMAIL="travis@travis-ci.org"
