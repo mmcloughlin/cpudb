@@ -1,3 +1,4 @@
+// Package cpudb provides a database of x86 processors and their CPUID values. The data is derived from the InstLatx64 website.
 package cpudb
 
 // CPU represents CPU properties.

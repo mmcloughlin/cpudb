@@ -71,7 +71,7 @@ func Build(cpus []*cpudb.CPU) []byte {
 	return w.Bytes()
 }
 
-// Write formatted Go code that initializes the given CPU list to a Writer.
+// Output formatted Go code that initializes the given CPU list to a Writer.
 func Output(w io.Writer, cpus []*cpudb.CPU) error {
 	code, err := format.Source(Build(cpus))
 	if err != nil {

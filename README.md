@@ -35,7 +35,7 @@ func main() {
 }
 ```
 
-The output is:
+Output:
 
 [embedmd]:# (example/sha.out)
 ```out
