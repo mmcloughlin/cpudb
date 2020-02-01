@@ -25,7 +25,7 @@ var (
 
 // CPUIDFiles returns a list of all files in the given directory containing CPUID data.
 func CPUIDFiles(dir string) ([]string, error) {
-	return filepath.Glob(filepath.Join(dir, "*CPUID*.txt"))
+	return filepath.Glob(filepath.Join(dir, "*/*CPUID*.txt"))
 }
 
 // ParseCPUIDFiles parses all CPUID files in a directory. Errors are logged.

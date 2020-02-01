@@ -55,4 +55,5 @@ Apollo Lake: QuadCore , 466 MHz (24 x 19)
 Denverton: 16-Core Intel Atom C3958, 2000 MHz (20 x 100)
 Cannon Lake-U: DualCore Intel Core i3-8121U, 3200 MHz (32 x 100)
 Gemini Lake-D: QuadCore Intel Celeron J4105, 2400 MHz (24 x 100)
+Ice Lake-U: QuadCore Intel Core i7-1065G7, 1300 MHz (13 x 100)
 ```
