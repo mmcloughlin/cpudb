@@ -2,7 +2,7 @@
 
 [CPUID](https://en.wikipedia.org/wiki/CPUID) database derived from [InstLatx64](http://instlatx64.atw.hu).
 
-[![GoDoc Reference](http://img.shields.io/badge/godoc-reference-5272B4.svg?style=flat-square)](http://godoc.org/github.com/mmcloughlin/cpudb)
+[![go.dev Reference](https://img.shields.io/badge/doc-reference-007d9b?logo=go&style=flat-square)](https://pkg.go.dev/github.com/mmcloughlin/cpudb)
 [![Build status](https://img.shields.io/travis/mmcloughlin/cpudb.svg?style=flat-square)](https://travis-ci.org/mmcloughlin/cpudb)
 
 ## Description
